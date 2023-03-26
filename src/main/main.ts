@@ -3,7 +3,6 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import Store from 'electron-store';
-import updater from 'update-electron-app';
 import { resolveHtmlPath } from './util';
 import xmcl from './xmcl';
 
@@ -77,6 +76,8 @@ const createWindow = async () => {
     },
   });
 
+  mainWindow.webContents.openDevTools();
+
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', () => {
@@ -131,10 +132,10 @@ app
           win.webContents.openDevTools();
           break;
         case 'checkUpdate': {
-          updater({
-            repo: 'estluced/mc-lc',
-            updateInterval: '1 hour',
-            logger: log,
+          autoUpdater.setFeedURL({
+            provider: 'github',
+            owner: 'estluced',
+            repo: 'mc-lc',
           });
           autoUpdater.checkForUpdates();
           autoUpdater.on('update-available', () => {

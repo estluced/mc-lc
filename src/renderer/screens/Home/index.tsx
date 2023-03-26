@@ -10,6 +10,7 @@ function Home() {
       switch (event[0]) {
         case 'updateAvailable': {
           setUpdateAvailable(true);
+          console.log(event[1]);
           break;
         }
         default: {
