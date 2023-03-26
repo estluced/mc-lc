@@ -1,6 +1,6 @@
 {
   "name": "mc-lc",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "description": "A minecraft launcher",
   "license": "MIT",
   "main": "./dist/main/main.js",
