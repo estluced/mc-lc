@@ -21,6 +21,12 @@ function Home() {
 
   return (
     <Box>
+      <button
+        type="button"
+        onClick={() => ipcRenderer.sendMessage('app', ['checkUpdate'])}
+      >
+        check upd
+      </button>
       <h1>{updateAvailable ? 'Update' : 'Home'}</h1>
     </Box>
   );

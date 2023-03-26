@@ -128,7 +128,16 @@ app
           break;
         case 'openDevTools':
           win.webContents.openDevTools();
-        // eslint-disable-next-line no-fallthrough
+          break;
+        case 'checkUpdate': {
+          autoUpdater.checkForUpdates();
+          autoUpdater.on('update-available', () => {
+            event.reply('app', ['updateAvailable']);
+            autoUpdater.downloadUpdate();
+            autoUpdater.quitAndInstall();
+          });
+          break;
+        }
         default:
           break;
       }
