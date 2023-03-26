@@ -115,7 +115,6 @@ app
           win.webContents.openDevTools();
           break;
         case 'checkUpdate': {
-          autoUpdater.checkForUpdatesAndNotify();
           autoUpdater.checkForUpdates();
           autoUpdater.on('update-available', () => {
             event.reply('app', ['updateAvailable']);
