@@ -3,6 +3,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import Store from 'electron-store';
+import updater from 'update-electron-app';
 import { resolveHtmlPath } from './util';
 import xmcl from './xmcl';
 
@@ -130,6 +131,11 @@ app
           win.webContents.openDevTools();
           break;
         case 'checkUpdate': {
+          updater({
+            repo: 'estluced/mc-lc',
+            updateInterval: '1 hour',
+            logger: log,
+          });
           autoUpdater.checkForUpdates();
           autoUpdater.on('update-available', () => {
             event.reply('app', ['updateAvailable']);
