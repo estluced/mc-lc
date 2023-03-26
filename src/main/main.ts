@@ -134,6 +134,10 @@ app
         case 'checkUpdate': {
           autoUpdater.checkForUpdatesAndNotify();
           autoUpdater.checkForUpdates();
+          autoUpdater.logger = log;
+          autoUpdater!.logger?.error(console.log);
+          autoUpdater!.logger?.info(console.log);
+          autoUpdater!.logger?.warn(console.log);
           autoUpdater.on('update-available', () => {
             event.reply('app', ['updateAvailable']);
             autoUpdater.downloadUpdate();
