@@ -17,11 +17,6 @@ async function installVersion(event: IpcMainEvent, version: MinecraftVersion) {
     minecraftPath
   );
 
-  event.reply('launcher/core', [
-    'console.log',
-    { versionMetadata, minecraftPath },
-  ]);
-
   const updateTaskProgress = (task: Task) => {
     event.reply('launcher/core', [
       'versionInstallationProgress',

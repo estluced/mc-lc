@@ -10,7 +10,6 @@ async function launchMinecraft(
   event: IpcMainEvent,
   { version, username }: { version: MinecraftVersion; username: string }
 ) {
-  console.log(version);
   const javaPath = await installJava(event);
   const java = `${javaPath}\\bin\\java.exe`;
   const minecraftPath = `${app.getAppPath()}\\minecraft\\${version.id}`;

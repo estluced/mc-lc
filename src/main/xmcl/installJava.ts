@@ -14,8 +14,6 @@ async function installJava(event: IpcMainEvent) {
     destination,
   });
 
-  event.reply('launcher/core', ['console.log', { manifest, destination }]);
-
   const updateTaskProgress = (task: Task) => {
     event.reply('launcher/core', [
       'versionInstallationProgress',
