@@ -28,7 +28,7 @@ function Home() {
       >
         check upd
       </button>
-      <h1>{updateAvailable ? 'Update' : 'Home'}</h1>
+      <h1>{updateAvailable ? 'Upd' : 'Home'}</h1>
     </Box>
   );
 }
