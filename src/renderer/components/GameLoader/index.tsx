@@ -103,10 +103,6 @@ function GameLoader() {
     launch(v);
   };
 
-  const updateLauncher = () => {
-    ipcRenderer.sendMessage('app', ['updateLauncher']);
-  };
-
   return (
     <Box
       p="20px"
@@ -130,13 +126,11 @@ function GameLoader() {
         {selectedVersion?.id ?? 'Select version'}
       </Button>
       <Button
-        onClick={() =>
-          updateAvailable ? updateLauncher() : launch(selectedVersion!)
-        }
+        onClick={() => launch(selectedVersion!)}
         disabled={launchDisabled}
         variant="contained"
       >
-        {updateAvailable ? 'Update' : 'Launch'}
+        Launch
       </Button>
       <Versions
         versions={versions}

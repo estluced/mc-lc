@@ -116,28 +116,26 @@ app
           break;
         case 'checkUpdate': {
           autoUpdater.checkForUpdates();
+          autoUpdater.autoDownload = true;
           autoUpdater.on('update-available', () => {
             event.reply('app', ['updateAvailable']);
+            autoUpdater
+              .downloadUpdate()
+              .then(() => {
+                autoUpdater.quitAndInstall();
+              })
+              .catch(() =>
+                event.reply('app', ['updateError', 'Download failed'])
+              );
+            autoUpdater.on('download-progress', (progressObj) => {
+              event.reply('app', ['updateProgress', progressObj]);
+            });
+            autoUpdater.on('error', (err) => {
+              event.reply('app', ['updateError', err]);
+            });
           });
           autoUpdater.on('update-not-available', () => {
             event.reply('app', ['updateNotAvailable']);
-          });
-          autoUpdater.on('error', (err) => {
-            event.reply('app', ['updateError', err]);
-          });
-          break;
-        }
-        case 'updateLauncher': {
-          autoUpdater
-            .downloadUpdate()
-            .then(() => {
-              autoUpdater.quitAndInstall();
-            })
-            .catch(() =>
-              event.reply('app', ['updateError', 'Download failed'])
-            );
-          autoUpdater.on('download-progress', (progressObj) => {
-            event.reply('app', ['updateProgress', progressObj]);
           });
           autoUpdater.on('error', (err) => {
             event.reply('app', ['updateError', err]);
