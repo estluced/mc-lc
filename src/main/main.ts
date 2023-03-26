@@ -116,7 +116,7 @@ app
           break;
         case 'checkUpdate': {
           autoUpdater.checkForUpdates();
-          autoUpdater.autoDownload = true;
+          autoUpdater.autoDownload = false;
           autoUpdater.on('update-available', () => {
             event.reply('app', ['updateAvailable']);
             autoUpdater
