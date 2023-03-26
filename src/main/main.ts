@@ -1,25 +1,23 @@
 import path from 'path';
-import { app, BrowserWindow, ipcMain } from 'electron';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
+import { app, BrowserWindow, ipcMain, autoUpdater } from 'electron';
 import Store from 'electron-store';
 import { resolveHtmlPath } from './util';
 import xmcl from './xmcl';
 
 const store = new Store();
 
-class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-    autoUpdater.checkForUpdates();
-    autoUpdater.on('update-available', () => {
-      ipcMain.emit('app', ['updateAvailable']);
-      autoUpdater.downloadUpdate();
-      autoUpdater.quitAndInstall();
-    });
-  }
-}
+// class AppUpdater {
+//   constructor() {
+//     log.transports.file.level = 'info';
+//     autoUpdater.logger = log;
+//     autoUpdater.checkForUpdates();
+//     autoUpdater.on('update-available', () => {
+//       ipcMain.emit('app', ['updateAvailable']);
+//       autoUpdater.downloadUpdate();
+//       autoUpdater.quitAndInstall();
+//     });
+//   }
+// }
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -132,15 +130,9 @@ app
           win.webContents.openDevTools();
           break;
         case 'checkUpdate': {
-          autoUpdater.checkForUpdatesAndNotify();
           autoUpdater.checkForUpdates();
-          autoUpdater.logger = log;
-          autoUpdater!.logger?.error(console.log);
-          autoUpdater!.logger?.info(console.log);
-          autoUpdater!.logger?.warn(console.log);
           autoUpdater.on('update-available', () => {
             event.reply('app', ['updateAvailable']);
-            autoUpdater.downloadUpdate();
             autoUpdater.quitAndInstall();
           });
           autoUpdater.on('update-not-available', () => {
