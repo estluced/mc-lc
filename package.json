@@ -1,9 +1,7 @@
 {
   "name": "mc-lc",
   "description": "A mc launcher",
-  "homepage": "https://github.com/estluced/mc-lc#readme",
   "repository": "https://github.com/estluced/mc-lc",
-  "license": "MIT",
   "main": "./src/main/main.ts",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
@@ -151,6 +149,10 @@
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0"
   },
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
   "build": {
     "productName": "MinecraftLC",
     "appId": "org.erb.MinecraftLC",
@@ -208,12 +210,7 @@
     },
     "extraResources": [
       "./assets/**"
-    ],
-    "publish": {
-      "provider": "github",
-      "owner": "estluced",
-      "repo": "mc-lc"
-    }
+    ]
   },
   "devEngines": {
     "node": ">=14.x",
