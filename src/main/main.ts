@@ -142,6 +142,7 @@ app
           autoUpdater.on('error', (err) => {
             event.reply('app', ['updateError', err]);
           });
+          break;
         }
         default:
           break;

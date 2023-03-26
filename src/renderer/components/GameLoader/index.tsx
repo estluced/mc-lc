@@ -19,6 +19,7 @@ function GameLoader() {
   const [updateAvailable, setUpdateAvailable] = useState(false);
 
   useEffect(() => {
+    ipcRenderer.sendMessage('app', ['checkUpdate']);
     const username = store.get('username');
     if (username) {
       setUsername(username);
