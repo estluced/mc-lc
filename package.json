@@ -4,7 +4,7 @@
   "homepage": "https://github.com/estluced/mc-lc#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/estluced/mc-lc.git"
+    "url": "https://github.com/estluced/mc-lc.git"
   },
   "license": "MIT",
   "main": "./src/main/main.ts",
