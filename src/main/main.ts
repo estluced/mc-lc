@@ -118,8 +118,17 @@ app
           autoUpdater.checkForUpdates();
           autoUpdater.on('update-available', () => {
             event.reply('app', ['updateAvailable']);
-            autoUpdater.downloadUpdate();
-            autoUpdater.quitAndInstall();
+            autoUpdater
+              .downloadUpdate()
+              .then(() => {
+                autoUpdater.quitAndInstall();
+              })
+              .catch(() =>
+                event.reply('app', ['updateError', 'Download failed'])
+              );
+          });
+          autoUpdater.on('download-progress', (progressObj) => {
+            event.reply('app', ['updateProgress', progressObj]);
           });
           autoUpdater.on('update-not-available', () => {
             event.reply('app', ['updateNotAvailable']);
