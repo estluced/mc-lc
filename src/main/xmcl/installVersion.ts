@@ -9,7 +9,7 @@ async function installVersion(event: IpcMainEvent, version: MinecraftVersion) {
   const versionMetadata: MinecraftVersion = list.find(
     (v) => v.id === version.id
   )!;
-  const minecraftPath = `${app.getPath('appData')}\\.mc-cl\\${
+  const minecraftPath = `${app.getPath('appData')}\\.mclc\\${
     versionMetadata.id
   }`;
   const installAllTask: Task<ResolvedVersion> = installTask(

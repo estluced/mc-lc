@@ -12,7 +12,7 @@ async function launchMinecraft(
 ) {
   const javaPath = await installJava(event);
   const java = `${javaPath}\\bin\\java.exe`;
-  const minecraftPath = `${app.getAppPath()}\\minecraft\\${version.id}`;
+  const minecraftPath = `${app.getPath('appData')}\\.mclc\\${version.id}`;
   const authOffline: Authentication = offline(username);
   installVersion(event, version)
     .then(async () => {

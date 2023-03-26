@@ -7,7 +7,7 @@ import { Task } from '@xmcl/task';
 import { app, IpcMainEvent } from 'electron';
 
 async function installJava(event: IpcMainEvent) {
-  const destination = `${app.getPath('appData')}\\.mc-cl\\java`;
+  const destination = `${app.getPath('appData')}\\.mclc\\java`;
   const manifest: JavaRuntimeManifest = await fetchJavaRuntimeManifest();
   const installJavaTask: Task<void> = installJavaRuntimesTask({
     manifest,
