@@ -132,16 +132,18 @@ app
           win.webContents.openDevTools();
           break;
         case 'checkUpdate': {
-          autoUpdater.setFeedURL({
-            provider: 'github',
-            owner: 'estluced',
-            repo: 'mc-lc',
-          });
+          autoUpdater.checkForUpdatesAndNotify();
           autoUpdater.checkForUpdates();
           autoUpdater.on('update-available', () => {
             event.reply('app', ['updateAvailable']);
             autoUpdater.downloadUpdate();
             autoUpdater.quitAndInstall();
+          });
+          autoUpdater.on('update-not-available', () => {
+            event.reply('app', ['updateNotAvailable']);
+          });
+          autoUpdater.on('error', (err) => {
+            event.reply('app', ['updateError', err]);
           });
           break;
         }

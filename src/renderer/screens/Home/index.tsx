@@ -13,6 +13,16 @@ function Home() {
           console.log(event[1]);
           break;
         }
+        case 'updateNotAvailable': {
+          setUpdateAvailable(false);
+          console.log('updateNotAvailable', event[1]);
+          break;
+        }
+        case 'updateError': {
+          setUpdateAvailable(false);
+          console.log('updateError', event[1]);
+          break;
+        }
         default: {
           break;
         }
