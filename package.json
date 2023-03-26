@@ -1,7 +1,10 @@
 {
   "name": "mc-lc",
   "description": "A mc launcher",
-  "repository": "https://github.com/estluced/mc-lc",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/estluced/mc-lc.git"
+  },
   "main": "./src/main/main.ts",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
@@ -210,7 +213,12 @@
     },
     "extraResources": [
       "./assets/**"
-    ]
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "estluced",
+      "repo": "mc-lc"
+    }
   },
   "devEngines": {
     "node": ">=14.x",
