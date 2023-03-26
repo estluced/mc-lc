@@ -1,34 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box } from '@mui/material';
 
 function Home() {
   const { ipcRenderer } = window.electron;
-  const [updateAvailable, setUpdateAvailable] = useState(false);
-
-  useEffect(() => {
-    ipcRenderer.on('app', (event: [string, any]) => {
-      switch (event[0]) {
-        case 'updateAvailable': {
-          setUpdateAvailable(true);
-          console.log(event[1]);
-          break;
-        }
-        case 'updateNotAvailable': {
-          setUpdateAvailable(false);
-          console.log('updateNotAvailable', event[1]);
-          break;
-        }
-        case 'updateError': {
-          setUpdateAvailable(false);
-          console.log('updateError', event[1]);
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-    });
-  }, [ipcRenderer]);
 
   return (
     <Box>
@@ -36,9 +10,8 @@ function Home() {
         type="button"
         onClick={() => ipcRenderer.sendMessage('app', ['checkUpdate'])}
       >
-        check upd
+        force update
       </button>
-      <h1>{updateAvailable ? 'Upd' : 'Home'}</h1>
     </Box>
   );
 }
