@@ -2,10 +2,7 @@
   "name": "mc-lc",
   "description": "A mc launcher",
   "homepage": "https://github.com/estluced/mc-lc#readme",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/estluced/mc-lc.git"
-  },
+  "repository": "https://github.com/estluced/mc-lc",
   "license": "MIT",
   "main": "./src/main/main.ts",
   "scripts": {
@@ -210,12 +207,11 @@
     },
     "extraResources": [
       "./assets/**"
-    ],
-    "publish": {
-      "provider": "github",
-      "owner": "estluced",
-      "repo": "mc-lc"
-    }
+    ]
+  },
+  "publish": {
+    "provider": "github",
+    "type": "release"
   },
   "devEngines": {
     "node": ">=14.x",
