@@ -12,8 +12,11 @@ class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
-    autoUpdater.on('update-available', () => {});
+    autoUpdater.checkForUpdates();
+    autoUpdater.on('update-available', () => {
+      autoUpdater.downloadUpdate();
+      autoUpdater.quitAndInstall();
+    });
   }
 }
 
