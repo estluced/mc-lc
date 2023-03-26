@@ -16,6 +16,7 @@ function GameLoader() {
   const [username, setUsername] = useState('');
   const [launchDisabled, setLaunchDisabled] = useState(true);
   const [installStatus, setInstallStatus] = useState('Status');
+  const [updateAvailable, setUpdateAvailable] = useState(false);
 
   useEffect(() => {
     const username = store.get('username');
@@ -58,6 +59,34 @@ function GameLoader() {
         }
       }
     });
+    ipcRenderer.on('app', (event: [string, any]) => {
+      switch (event[0]) {
+        case 'updateAvailable': {
+          setUpdateAvailable(true);
+          console.log(event[1]);
+          break;
+        }
+        case 'updateProgress': {
+          setInstallStatus('launcherUpdater.downloadingUpdate');
+          setProgressMax(event[1].total);
+          setProgress(event[1].transferred);
+          break;
+        }
+        case 'updateNotAvailable': {
+          setUpdateAvailable(false);
+          console.log('updateNotAvailable', event[1]);
+          break;
+        }
+        case 'updateError': {
+          setUpdateAvailable(false);
+          console.log('updateError', event[1]);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    });
   }, [ipcRenderer, store]);
 
   const launch = (version: MinecraftVersion) => {
@@ -71,6 +100,10 @@ function GameLoader() {
     setSelectedVersion(v);
     setVersionSelectorOpen(false);
     launch(v);
+  };
+
+  const updateLauncher = () => {
+    ipcRenderer.sendMessage('app', ['updateLauncher']);
   };
 
   return (
@@ -96,11 +129,13 @@ function GameLoader() {
         {selectedVersion?.id ?? 'Select version'}
       </Button>
       <Button
-        onClick={() => launch(selectedVersion!)}
+        onClick={() =>
+          updateAvailable ? updateLauncher() : launch(selectedVersion!)
+        }
         disabled={launchDisabled}
         variant="contained"
       >
-        launch
+        {updateAvailable ? 'Update' : 'Launch'}
       </Button>
       <Versions
         versions={versions}
