@@ -14,6 +14,7 @@ class AppUpdater {
     autoUpdater.logger = log;
     autoUpdater.checkForUpdates();
     autoUpdater.on('update-available', () => {
+      ipcMain.emit('app', ['updateAvailable']);
       autoUpdater.downloadUpdate();
       autoUpdater.quitAndInstall();
     });
