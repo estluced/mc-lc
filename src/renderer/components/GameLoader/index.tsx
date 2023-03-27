@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react';
 import { MinecraftVersion } from '@xmcl/installer';
 import Button from '@mui/material/Button';
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, ButtonGroup } from '@mui/material';
+import { Authentication } from '@xmcl/user';
 import { ProgressBarContainer } from './styles';
 import Versions from './Versions';
+import Login from './Login';
+import Settings from './Settings';
+
+function calculateMemoryAllocation(totalMemory: number) {
+  const minAllocationSize = 2048;
+  const minMemoryAllocation = Math.max(minAllocationSize, totalMemory * 0.1);
+  return Math.ceil(minMemoryAllocation);
+}
 
 function GameLoader() {
   const { ipcRenderer, store } = window.electron;
@@ -13,17 +22,22 @@ function GameLoader() {
   const [progress, setProgress] = useState(1);
   const [progressMax, setProgressMax] = useState(1);
   const [versionSelectorOpen, setVersionSelectorOpen] = useState(false);
-  const [username, setUsername] = useState('');
+  const [userMetadata, setUserMetadata] = useState<Authentication | null>(null);
   const [launchDisabled, setLaunchDisabled] = useState(true);
   const [installStatus, setInstallStatus] = useState('Status');
-  const [updateAvailable, setUpdateAvailable] = useState(false);
+  const [loginModal, setLoginModal] = useState(false);
+  const [settingsModal, setSettingsModal] = useState(false);
+
+  const loadUserMetadata = () => {
+    const userMetadataStored = store.get('userMetadata');
+    if (userMetadataStored) {
+      setUserMetadata(userMetadataStored);
+    }
+  };
 
   useEffect(() => {
+    loadUserMetadata();
     ipcRenderer.sendMessage('app', ['checkUpdate']);
-    const username = store.get('username');
-    if (username) {
-      setUsername(username);
-    }
     ipcRenderer.sendMessage('launcher/core', ['getVersions']);
     ipcRenderer.on('launcher/core', (event: [string, any]) => {
       switch (event[0]) {
@@ -41,16 +55,17 @@ function GameLoader() {
         }
         case 'versionInstallationProgress': {
           const eventData = event[1];
+          console.log(event[1].total, event[1].progress);
           setInstallStatus(eventData.path);
           setProgress(eventData.progress);
           setProgressMax(eventData.total);
           break;
         }
-        case 'versionInstallationStarted': {
+        case 'processStarted': {
           setLaunchDisabled(true);
           break;
         }
-        case 'versionInstallationSuccess': {
+        case 'processExited': {
           setInstallStatus('Status');
           setLaunchDisabled(false);
           break;
@@ -63,7 +78,6 @@ function GameLoader() {
     ipcRenderer.on('app', (event: [string, any]) => {
       switch (event[0]) {
         case 'updateAvailable': {
-          setUpdateAvailable(true);
           console.log(event[1]);
           break;
         }
@@ -74,12 +88,10 @@ function GameLoader() {
           break;
         }
         case 'updateNotAvailable': {
-          setUpdateAvailable(false);
           console.log('updateNotAvailable', event[1]);
           break;
         }
         case 'updateError': {
-          setUpdateAvailable(false);
           console.log('updateError', event[1]);
           break;
         }
@@ -91,52 +103,79 @@ function GameLoader() {
   }, [ipcRenderer, store]);
 
   const launch = (version: MinecraftVersion) => {
-    console.log(version);
-    store.set('username', username);
-    store.set('mcVersion', version);
-    ipcRenderer.sendMessage('launcher/core', ['launch', { version, username }]);
+    const dedicatedMemory =
+      // eslint-disable-next-line no-bitwise
+      store.get('dedicatedMemory') |
+      calculateMemoryAllocation(store.get('totalMemory'));
+    ipcRenderer.sendMessage('launcher/core', [
+      'launch',
+      { version, userMetadata, dedicatedMemory },
+    ]);
   };
 
   const selectVersionAndLaunch = (v: MinecraftVersion) => {
     setSelectedVersion(v);
     setVersionSelectorOpen(false);
-    launch(v);
   };
 
   return (
     <Box
-      p="20px"
+      p="10px"
       display="flex"
-      gap="5px"
+      gap="10px"
       position="fixed"
       bottom="0"
       width="100%"
     >
-      <TextField
+      <Button
+        sx={{
+          width: '100px',
+        }}
         variant="outlined"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        label="Username"
-      />
+        onClick={() => setLoginModal(true)}
+      >
+        <div
+          style={{
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {userMetadata?.selectedProfile?.name ?? 'Login'}
+        </div>
+      </Button>
       <ProgressBarContainer flex={1}>
-        <Typography>{installStatus}</Typography>
         <progress value={progress} max={progressMax} />
       </ProgressBarContainer>
-      <Button onClick={() => setVersionSelectorOpen(true)} variant="contained">
-        {selectedVersion?.id ?? 'Select version'}
-      </Button>
-      <Button
-        onClick={() => launch(selectedVersion!)}
-        disabled={launchDisabled}
-        variant="contained"
-      >
-        Launch
-      </Button>
+      <ButtonGroup variant="outlined" aria-label="outlined button group">
+        <Button onClick={() => setVersionSelectorOpen(true)}>
+          {selectedVersion?.id ?? 'Select version'}
+        </Button>
+        <Button onClick={() => setSettingsModal(true)}>s</Button>
+        <Button
+          onClick={() => launch(selectedVersion!)}
+          disabled={launchDisabled}
+          variant="contained"
+        >
+          Launch
+        </Button>
+      </ButtonGroup>
       <Versions
         versions={versions}
         open={versionSelectorOpen}
         onClose={() => setVersionSelectorOpen(false)}
         selectVersionAndLaunch={selectVersionAndLaunch}
+      />
+      <Settings
+        isOpen={settingsModal}
+        onClose={() => setSettingsModal(false)}
+      />
+      <Login
+        isOpen={loginModal}
+        onClose={() => {
+          setLoginModal(false);
+          loadUserMetadata();
+        }}
       />
     </Box>
   );

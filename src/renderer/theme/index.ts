@@ -4,6 +4,6 @@ import getOverrides from './overrides';
 
 const theme = createTheme({ palette });
 
-theme.components = getOverrides();
+theme.components = getOverrides(theme);
 
 export default theme;

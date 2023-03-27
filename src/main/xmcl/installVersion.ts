@@ -20,34 +20,24 @@ async function installVersion(event: IpcMainEvent, version: MinecraftVersion) {
   const updateTaskProgress = (task: Task) => {
     event.reply('launcher/core', [
       'versionInstallationProgress',
-      { total: task.total, progress: task.progress, path: task.path },
+      {
+        total: installAllTask.total,
+        progress: installAllTask.progress,
+        path: task.path,
+      },
     ]);
-  };
-
-  const trackTask = () => {
-    event.reply('launcher/core', ['versionInstallationStarted']);
   };
 
   const setTaskToFail = (task: Task) => {
     event.reply('launcher/core', ['versionInstallationFailed', task]);
   };
 
-  const setTaskToSuccess = () => {
-    event.reply('launcher/core', ['versionInstallationSuccess']);
-  };
-
   await installAllTask.startAndWait({
-    onStart() {
-      trackTask();
-    },
     onUpdate(task: Task) {
       updateTaskProgress(task);
     },
     onFailed(task: Task) {
       setTaskToFail(task);
-    },
-    onSucceed() {
-      setTaskToSuccess();
     },
     onPaused(task: Task<any>) {
       console.log(task.path, 'paused');

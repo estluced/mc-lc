@@ -13,6 +13,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'no-shadow': 'off',
     'no-unused-vars': 'off',
+    'react-hooks/exhaustive-deps': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

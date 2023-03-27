@@ -7,10 +7,10 @@ export default {
     main: '#ff5252',
   },
   background: {
-    paper: '#181818',
-    default: '#121212',
+    paper: '#222222',
+    default: '#222222',
   },
-  divider: '#666666',
+  divider: '#333333',
   text: {
     secondary: '#ffffff',
     primary: '#ffffff',

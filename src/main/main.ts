@@ -2,10 +2,14 @@ import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import Store from 'electron-store';
+import os from 'os';
 import { resolveHtmlPath } from './util';
 import xmcl from './xmcl';
 
+const totalRam = Number(os.totalmem() / 1024 / 1024).toFixed();
 const store = new Store();
+
+store.set('totalRam', totalRam);
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -89,6 +93,10 @@ ipcMain.on('electron-store-get', async (event, val) => {
 });
 ipcMain.on('electron-store-set', async (event, key, val) => {
   store.set(key, val);
+});
+
+ipcMain.on('electron-store-clear', async (event) => {
+  store.clear();
 });
 
 app.on('window-all-closed', () => {

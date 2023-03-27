@@ -9,6 +9,7 @@ declare global {
       get: (key: string) => any;
       // eslint-disable-next-line no-unused-vars
       set: (key: string, val: any) => void;
+      clear: () => void;
     };
   }
 }

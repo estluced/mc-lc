@@ -21,30 +21,16 @@ async function installJava(event: IpcMainEvent) {
     ]);
   };
 
-  const trackTask = () => {
-    event.reply('launcher/core', ['versionInstallationStarted']);
-  };
-
   const setTaskToFail = (task: Task) => {
     event.reply('launcher/core', ['versionInstallationFailed', task]);
   };
 
-  const setTaskToSuccess = () => {
-    event.reply('launcher/core', ['versionInstallationSuccess']);
-  };
-
   await installJavaTask.startAndWait({
-    onStart() {
-      trackTask();
-    },
     onUpdate(task: Task) {
       updateTaskProgress(task);
     },
     onFailed(task: Task) {
       setTaskToFail(task);
-    },
-    onSucceed() {
-      setTaskToSuccess();
     },
     onPaused(task: Task<any>) {
       console.log(task.path, 'paused');
